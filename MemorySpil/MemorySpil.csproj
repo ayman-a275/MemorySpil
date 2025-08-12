@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Model\" />
     <Folder Include="ModelView\" />
     <Folder Include="Command\" />
     <Folder Include="View\" />

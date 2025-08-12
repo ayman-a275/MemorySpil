@@ -5,8 +5,170 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MemorySpil"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="Memory Spil" Height="600" Width="800" WindowStartupLocation="CenterScreen">
 
+    <Window.Resources>
+        <Style TargetType="Button" x:Key="CardButtonStyle">
+            <Setter Property="Width" Value="80"/>
+            <Setter Property="Height" Value="80"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="FontSize" Value="24"/>
+            <Setter Property="Background" Value="LightBlue"/>
+            <Setter Property="BorderBrush" Value="DarkBlue"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="LightSteelBlue"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="SteelBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="GameButtonStyle">
+            <Setter Property="Padding" Value="15,5"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="CornflowerBlue"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="DarkBlue"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="200"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header with game info -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <TextBlock Text="Spiller: " VerticalAlignment="Center" Margin="0,0,5,0" FontWeight="Bold"/>
+            <TextBox x:Name="PlayerNameTextBox" 
+                     Text="{Binding PlayerName, UpdateSourceTrigger=PropertyChanged}" 
+                     Width="150" Height="25" VerticalAlignment="Center" Margin="0,0,20,0"/>
+
+            <TextBlock Text="Træk: " VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="{Binding MoveCount}" VerticalAlignment="Center" Margin="0,0,20,0" FontSize="14"/>
+
+            <TextBlock Text="Tid: " VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock Text="{Binding GameTime}" VerticalAlignment="Center" Margin="0,0,20,0" FontSize="14"/>
+
+            <TextBlock Text="Status: " VerticalAlignment="Center" FontWeight="Bold"/>
+            <TextBlock VerticalAlignment="Center" FontSize="14">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="Text" Value="Spiller..."/>
+                        <Setter Property="Foreground" Value="Blue"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsGameCompleted}" Value="True">
+                                <Setter Property="Text" Value="Færdig!"/>
+                                <Setter Property="Foreground" Value="Green"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
+        </StackPanel>
+
+        <!-- Game board -->
+        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="2" Margin="20" CornerRadius="10">
+            <UniformGrid Rows="4" Columns="4" Margin="10">
+                <ItemsControl ItemsSource="{Binding Cards}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <UniformGrid Rows="4" Columns="4" Margin="0,0,-554,-156"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Command="{Binding DataContext.FlipCardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                    CommandParameter="{Binding}">
+                                <Button.Content>
+                                    <TextBlock FontSize="32">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Setter Property="Text" Value="?"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                                        <Setter Property="Text" Value="{Binding Symbol}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                                        <Setter Property="Text" Value="{Binding Symbol}"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </Button.Content>
+                                <Button.Style>
+                                    <Style TargetType="Button" BasedOn="{StaticResource CardButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                                <Setter Property="Background" Value="LightGreen"/>
+                                                <Setter Property="BorderBrush" Value="Green"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                                <Setter Property="Background" Value="White"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </UniformGrid>
+        </Border>
+
+        <!-- Control buttons -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
+            <Button Content="Nyt Spil" 
+                    Command="{Binding NewGameCommand}"
+                    Style="{StaticResource GameButtonStyle}"/>
+
+            <Button Content="Gem Resultat" 
+                    Command="{Binding SaveStatsCommand}"
+                    Style="{StaticResource GameButtonStyle}"/>
+
+            <Button Content="Vis Topresultater" 
+                    Command="{Binding ShowHighScoresCommand}"
+                    Style="{StaticResource GameButtonStyle}"/>
+        </StackPanel>
+
+        <!-- High scores -->
+        <GroupBox Grid.Row="3" Header="Top 10 Resultater" Margin="20,0,20,20">
+            <DataGrid ItemsSource="{Binding HighScores}" 
+                      AutoGenerateColumns="False" 
+                      IsReadOnly="True"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      GridLinesVisibility="Horizontal"
+                      AlternatingRowBackground="LightGray">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Spiller" Binding="{Binding PlayerName}" Width="*"/>
+                    <DataGridTextColumn Header="Træk" Binding="{Binding Moves}" Width="60"/>
+                    <DataGridTextColumn Header="Tid" Binding="{Binding GameTime, StringFormat=mm\\:ss}" Width="80"/>
+                    <DataGridTextColumn Header="Dato" Binding="{Binding CompletedAt, StringFormat=dd/MM/yyyy HH:mm}" Width="120"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
     </Grid>
 </Window>

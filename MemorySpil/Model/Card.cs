@@ -1,21 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace MemorySpil.Model
 {
-    public class Card
-
+    public class Card : INotifyPropertyChanged
     {
-        public int Id { get; set; }
+        private int _id;
+        private string _symbol = string.Empty;
+        private bool _isFlipped;
+        private bool _isMatched;
 
-        public string Symbol { get; set; } // "", "", "" osv. Eller bogstaver
+        public int Id
+        {
+            get => _id;
+            set
+            {
+                _id = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public bool IsFlipped { get; set; }
+        public string Symbol
+        {
+            get => _symbol;
+            set
+            {
+                _symbol = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public bool IsMatched { get; set; }
+        public bool IsFlipped
+        {
+            get => _isFlipped;
+            set
+            {
+                _isFlipped = value;
+                OnPropertyChanged();
+            }
+        }
 
+        public bool IsMatched
+        {
+            get => _isMatched;
+            set
+            {
+                _isMatched = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

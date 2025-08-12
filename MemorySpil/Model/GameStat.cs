@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace MemorySpil.Model
 {
     public class GameStat
-
     {
         public GameStat(string playerName, int moves, TimeSpan gameTime, DateTime completedAt)
         {
@@ -18,16 +17,13 @@ namespace MemorySpil.Model
         }
 
         public string PlayerName { get; set; }
-
         public int Moves { get; set; }
-
         public TimeSpan GameTime { get; set; }
-
         public DateTime CompletedAt { get; set; }
 
-        public string toString()
+        public override string ToString()
         {
-            return $"{PlayerName},{Moves.ToString()},{GameTime.ToString()},{CompletedAt.ToString()}";
+            return $"{PlayerName},{Moves},{GameTime:mm\\:ss},{CompletedAt:yyyy-MM-dd HH:mm:ss}";
         }
     }
 }

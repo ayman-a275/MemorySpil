@@ -9,6 +9,13 @@ namespace MemorySpil.Model
     public class GameStat
 
     {
+        public GameStat(string playerName, int moves, TimeSpan gameTime, DateTime completedAt)
+        {
+            PlayerName = playerName;
+            Moves = moves;
+            GameTime = gameTime;
+            CompletedAt = completedAt;
+        }
 
         public string PlayerName { get; set; }
 
@@ -18,5 +25,9 @@ namespace MemorySpil.Model
 
         public DateTime CompletedAt { get; set; }
 
+        public string toString()
+        {
+            return $"{PlayerName},{Moves.ToString()},{GameTime.ToString()},{CompletedAt.ToString()}";
+        }
     }
 }

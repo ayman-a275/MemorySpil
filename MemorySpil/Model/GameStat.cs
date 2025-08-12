@@ -21,7 +21,7 @@ namespace MemorySpil.Model
         public TimeSpan GameTime { get; set; }
         public DateTime CompletedAt { get; set; }
 
-        public override string ToString()
+        public override string ToString() //ændret
         {
             return $"{PlayerName},{Moves},{GameTime:mm\\:ss},{CompletedAt:yyyy-MM-dd HH:mm:ss}";
         }

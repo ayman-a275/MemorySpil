@@ -9,13 +9,18 @@
 
     <Window.Resources>
         <Style TargetType="Button" x:Key="CardButtonStyle">
-            <Setter Property="Width" Value="80"/>
-            <Setter Property="Height" Value="80"/>
+            <!-- Remove fixed Width and Height to let cards fill space -->
             <Setter Property="Margin" Value="2"/>
             <Setter Property="FontSize" Value="24"/>
             <Setter Property="Background" Value="LightBlue"/>
             <Setter Property="BorderBrush" Value="DarkBlue"/>
             <Setter Property="BorderThickness" Value="2"/>
+            <!-- Make cards fill available space -->
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <!-- Set minimum size to ensure they're not too small -->
+            <Setter Property="MinWidth" Value="60"/>
+            <Setter Property="MinHeight" Value="60"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -88,54 +93,53 @@
             </TextBlock>
         </StackPanel>
 
-        <!-- Game board -->
+        <!-- Game board - Fixed to remove double UniformGrid -->
         <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="2" Margin="20" CornerRadius="10">
-            <UniformGrid Rows="4" Columns="4" Margin="10">
-                <ItemsControl ItemsSource="{Binding Cards}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <UniformGrid Rows="4" Columns="4" Margin="0,0,-554,-156"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Command="{Binding DataContext.FlipCardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    CommandParameter="{Binding}">
-                                <Button.Content>
-                                    <TextBlock FontSize="32">
-                                        <TextBlock.Style>
-                                            <Style TargetType="TextBlock">
-                                                <Setter Property="Text" Value="?"/>
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsFlipped}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding Symbol}"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsMatched}" Value="True">
-                                                        <Setter Property="Text" Value="{Binding Symbol}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </Button.Content>
-                                <Button.Style>
-                                    <Style TargetType="Button" BasedOn="{StaticResource CardButtonStyle}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsMatched}" Value="True">
-                                                <Setter Property="Background" Value="LightGreen"/>
-                                                <Setter Property="BorderBrush" Value="Green"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding IsFlipped}" Value="True">
-                                                <Setter Property="Background" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </UniformGrid>
+            <ItemsControl ItemsSource="{Binding Cards}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid Rows="4" Columns="4" Margin="10"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Command="{Binding DataContext.FlipCardCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                CommandParameter="{Binding}"
+                                Margin="3">
+                            <Button.Content>
+                                <TextBlock FontSize="32">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="?"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                                    <Setter Property="Text" Value="{Binding Symbol}"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                                    <Setter Property="Text" Value="{Binding Symbol}"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button.Content>
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource CardButtonStyle}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsMatched}" Value="True">
+                                            <Setter Property="Background" Value="LightGreen"/>
+                                            <Setter Property="BorderBrush" Value="Green"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding IsFlipped}" Value="True">
+                                            <Setter Property="Background" Value="White"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </Border>
 
         <!-- Control buttons -->

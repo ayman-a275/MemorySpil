@@ -240,6 +240,7 @@ namespace MemorySpil.ViewModel
                 {
                     _repository.SaveGameStat(gameStat);
                     LoadHighScores(); // Refresh high scores
+                    IsGameCompleted = false;
                 }
                 catch (Exception ex)
                 {
@@ -247,6 +248,7 @@ namespace MemorySpil.ViewModel
                     Console.WriteLine($"Failed to save stats: {ex.Message}");
                 }
             }
+            
         }
 
         private bool CanSaveStats(object? parameter)
